@@ -11,7 +11,12 @@ pub struct AppConfig {
 
 impl Default for AppConfig {
     fn default() -> Self {
-        Self { confidence_threshold: 0.85, template_directory: "assets/templates".into(), screenshot_directory: "screenshots".into(), dry_run: true }
+        Self {
+            confidence_threshold: 0.85,
+            template_directory: "assets/templates".into(),
+            screenshot_directory: "screenshots".into(),
+            dry_run: true,
+        }
     }
 }
 impl AppConfig {
@@ -21,11 +26,18 @@ impl AppConfig {
             fs::create_dir_all("config")?;
             fs::write(&path, toml::to_string_pretty(&Self::default())?)?;
         }
-        let value = toml::from_str(&fs::read_to_string(path)?)?;
+        let value: Self = toml::from_str(&fs::read_to_string(path)?)?;
         fs::create_dir_all(&value.template_directory)?;
         fs::create_dir_all(&value.screenshot_directory)?;
         Ok(value)
     }
 }
 #[derive(Debug, thiserror::Error)]
-pub enum ConfigError { #[error("filesystem: {0}")] Io(#[from] std::io::Error), #[error("TOML: {0}")] Toml(#[from] toml::de::Error), #[error("TOML: {0}")] Serialize(#[from] toml::ser::Error) }
+pub enum ConfigError {
+    #[error("filesystem: {0}")]
+    Io(#[from] std::io::Error),
+    #[error("TOML: {0}")]
+    Toml(#[from] toml::de::Error),
+    #[error("TOML: {0}")]
+    Serialize(#[from] toml::ser::Error),
+}

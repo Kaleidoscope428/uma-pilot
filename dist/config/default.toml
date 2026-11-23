@@ -1,0 +1,5 @@
+confidence_threshold = 0.85
+template_directory = "assets/templates"
+screenshot_directory = "screenshots"
+dry_run = true
+
